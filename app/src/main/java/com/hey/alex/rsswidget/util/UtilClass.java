@@ -29,6 +29,7 @@ public class UtilClass {
 
 
     public static Channel getChannel(String current_url) throws IOException, XmlPullParserException {
+        Log.d(TAG,"CHANNEL DOWNLOADED");
         Channel channel = new Channel();
         URL url = new URL(current_url);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -42,6 +43,7 @@ public class UtilClass {
             InputStream is = conn.getInputStream();
             BufferedInputStream reader = new BufferedInputStream(is);
             channel = parse(reader);
+            channel.setUrl(current_url);
             Log.d(TAG,"CHANNEL DOWNLOADED");
             is.close();
         }
@@ -113,6 +115,7 @@ public class UtilClass {
             }
             eventType = parser.next();
         }
+        Log.d(TAG, String.valueOf(result.getRssItems().size()));
         return result;
     }
 

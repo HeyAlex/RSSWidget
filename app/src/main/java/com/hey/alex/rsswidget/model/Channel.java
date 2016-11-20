@@ -3,6 +3,7 @@ package com.hey.alex.rsswidget.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class Channel implements Parcelable{
 
     private String description;
 
-    private List<RssItem> rssItems;
+    private List<RssItem> rssItems = new ArrayList<>();
 
     public Channel(Parcel in) {
         url = in.readString();
@@ -85,6 +86,7 @@ public class Channel implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(title);
         parcel.writeString(description);
+        parcel.writeString(url);
         parcel.writeTypedList(rssItems);
     }
 

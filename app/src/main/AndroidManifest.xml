@@ -21,11 +21,15 @@
                 android:resource="@xml/rssapp_widget_info" />
         </receiver>
 
+
+        <service
+            android:name=".service.RssService"
+            android:exported="false"/>
+
+
     </application>
 
 
-    <service
-        android:name=".service.RssService"
-        android:exported="false"/>
+
 
 </manifest>

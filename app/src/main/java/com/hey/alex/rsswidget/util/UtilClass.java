@@ -77,7 +77,7 @@ public class UtilClass {
 
     //RSS PARSING
     private static Channel parse(InputStream in) throws XmlPullParserException, IOException {
-        Channel result = null;
+        Channel channel = null;
         XmlPullParser parser = Xml.newPullParser();
         parser.setInput(in, null);
         int eventType = parser.getEventType();
@@ -92,31 +92,31 @@ public class UtilClass {
                 case XmlPullParser.START_TAG:
                     name = parser.getName();
                     namespace = parser.getNamespace();
-                    if (name.equals("channel")) {
-                        result = new Channel();
-                    } else if (!TextUtils.isEmpty(namespace)) {
+                    if (name.equalsIgnoreCase("channel")) {
+                        channel = new Channel();
+                    } else if (!TextUtils.isEmpty(namespace) || name.equalsIgnoreCase("image")) {
                         break;
-                    } else if (name.equals("item")) {
+                    } else if (name.equalsIgnoreCase("item")) {
                         currentItem = new Channel.RssItem();
                     } else if (currentItem != null) {
                         itemNode(parser, currentItem, name);
-                    } else if (result != null) {
-                        channelNode(parser, result, name);
+                    } else if (channel != null) {
+                        channelNode(parser, channel, name);
                     }
                     break;
                 case XmlPullParser.END_TAG:
                     name = parser.getName();
-                    if (result != null && name.equals("item")) {
-                        result.addRssItem(currentItem);
-                    } else if (name.equals("channel")) {
+                    if (channel != null && name.equals("item")) {
+                        channel.addRssItem(currentItem);
+                    } else if (name.equalsIgnoreCase("channel")) {
                         Log.d(TAG,"done parsing");
                     }
                     break;
             }
             eventType = parser.next();
         }
-        Log.d(TAG, String.valueOf(result.getRssItems().size()));
-        return result;
+        Log.d(TAG, String.valueOf(channel.getRssItems().size()));
+        return channel;
     }
 
     private static void itemNode(XmlPullParser parser, Channel.RssItem item, String name) throws IOException, XmlPullParserException {
@@ -138,6 +138,7 @@ public class UtilClass {
         switch (name) {
             case "title":
                 channel.setTitle(parser.nextText());
+                Log.d(TAG, channel.getTitle());
                 break;
 
             case "description":

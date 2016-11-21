@@ -3,6 +3,7 @@
     android:initialKeyguardLayout="@layout/rssapp_widget"
     android:initialLayout="@layout/rssapp_widget"
     android:minHeight="110dp"
+    android:configure="com.hey.alex.rsswidget.ui.SettingWidgetActivity"
     android:minWidth="250dp"
     android:previewImage="@drawable/example_appwidget_preview"
     android:resizeMode="horizontal|vertical"

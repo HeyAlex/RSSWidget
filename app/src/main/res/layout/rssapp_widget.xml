@@ -16,29 +16,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12dp"
+            android:textStyle="bold"
             android:textAlignment="center"
-            android:text="Title"
+            android:text=""
             android:layout_margin="5dp"
             android:textColor="@android:color/black"
             android:id="@+id/title" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textSize="10dp"
-            android:textAlignment="center"
-            android:text="DOWNLOADING..."
-            android:textColor="@android:color/black"
-            android:id="@+id/description" />
 
-        <RelativeLayout
+            <TextView
+
+                android:textSize="10dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="DOWNLOADING..."
+                android:textColor="@android:color/black"
+                android:id="@+id/description" />
+
+
+
+        <LinearLayout
             android:layout_width="match_parent"
+            android:orientation="horizontal"
             android:layout_height="wrap_content">
 
 
             <ImageButton
                 android:id="@+id/left_button"
+                android:background="#FFFF"
                 android:src="@drawable/ic_arrow_left_black_24px"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,16 +53,32 @@
                 android:layout_alignParentStart="true" />
 
 
+            <TextView
+                android:layout_width="match_parent"
+                android:textSize="10dp"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:layout_height="match_parent"
+                android:text=""
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@android:color/black"
+                android:id="@+id/channelName" />
+
             <ImageButton
                 android:id="@+id/right_button"
+                android:background="#FFFF"
                 android:src="@drawable/ic_arrow_right_black_24px"
-                android:layout_alignParentRight="true"
+
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
 
 
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
 

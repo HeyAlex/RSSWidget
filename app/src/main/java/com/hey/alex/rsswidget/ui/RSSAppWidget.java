@@ -6,13 +6,16 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.hey.alex.rsswidget.R;
 import com.hey.alex.rsswidget.model.Channel;
 
-import static com.hey.alex.rsswidget.service.RssService.setupAlarm;
+import static com.hey.alex.rsswidget.ui.SettingWidgetActivity.setupAlarm;
+
+//import static com.hey.alex.rsswidget.service.RssService.setupAlarm;
 
 /**
  * Implementation of App Widget functionality.
@@ -28,7 +31,7 @@ public class RSSAppWidget extends AppWidgetProvider {
 
     public static final String RSS_PREF = "RSS_PREF";
     private static Channel channel;
-    private static int sizeRss;
+    private static String title;
     private static int currentItem = 0;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -38,10 +41,9 @@ public class RSSAppWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.rssapp_widget);
         if(channel != null){
             //sizeRss = channel.getRssItems().size() -1;
-            Log.d(TAG, "channel not null");
             views.setTextViewText(R.id.title, channel.getRssItems().get(currentItem).getTitle());
             views.setTextViewText(R.id.description, channel.getRssItems().get(currentItem).getDescription());
-
+            views.setTextViewText(R.id.channelName, title);
 
             Intent rightButtonIntent = new Intent(context, RSSAppWidget.class);
             rightButtonIntent.setAction(RSS_CLICK_RIGHT);
@@ -71,8 +73,8 @@ public class RSSAppWidget extends AppWidgetProvider {
         switch (intent.getAction()){
             case RSS_UPDATE_COMPLETE:
                 Log.d(TAG, "RSS_UPDATE_COMPLETE");
-
                 channel = intent.getParcelableExtra("channel");
+                title = intent.getStringExtra("title");
                 invokeUpdate(context);
                 break;
             case RSS_CLICK_RIGHT:
@@ -106,15 +108,27 @@ public class RSSAppWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
+        super.onEnabled(context);
         Log.d(TAG, "onEnabled");
-        setupAlarm(context);
+        //setupAlarm(context);
         // Enter relevant functionality for when the first widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
+        super.onDisabled(context);
         Log.d(TAG, "onDisabled");
-        // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+        setupAlarm(context);
+    }
+
+    @Override
+    public void onRestored(Context context, int[] oldWidgetIds, int[] newWidgetIds) {
+        super.onRestored(context, oldWidgetIds, newWidgetIds);
     }
 }
 

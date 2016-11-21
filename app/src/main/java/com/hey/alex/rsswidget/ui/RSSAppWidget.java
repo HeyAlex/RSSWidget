@@ -111,7 +111,7 @@ public class RSSAppWidget extends AppWidgetProvider {
                 break;
             default:
         }
-        invokeUpdate(context);  invokeUpdate(context);
+        invokeUpdate(context); 
         super.onReceive(context, intent);
     }
 

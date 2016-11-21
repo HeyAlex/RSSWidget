@@ -8,12 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.hey.alex.rsswidget.R;
 import com.hey.alex.rsswidget.model.Channel;
 
 import static com.hey.alex.rsswidget.ui.SettingWidgetActivity.setupAlarm;
+import static com.hey.alex.rsswidget.ui.SettingWidgetActivity.stopAlarm;
 
 //import static com.hey.alex.rsswidget.service.RssService.setupAlarm;
 
@@ -25,44 +28,59 @@ public class RSSAppWidget extends AppWidgetProvider {
     public static final String TAG = "RSSAppWidget";
 
     public static final String RSS_UPDATE_COMPLETE = "RSS_UPDATE_ON_TASK_COMPLETE";
-
     public static final String RSS_CLICK_RIGHT = "RSS_CLICK_RIGHT";
     public static final String RSS_CLICK_LEFT = "RSS_CLICK_LEFT";
 
-    public static final String RSS_PREF = "RSS_PREF";
     private static Channel channel;
     private static String title;
     private static int currentItem = 0;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        //CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
+
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.rssapp_widget);
-        if(channel != null){
-            //sizeRss = channel.getRssItems().size() -1;
+        if(channel != null && channel.getRssItems().size() != 0){
+
             views.setTextViewText(R.id.title, channel.getRssItems().get(currentItem).getTitle());
             views.setTextViewText(R.id.description, channel.getRssItems().get(currentItem).getDescription());
             views.setTextViewText(R.id.channelName, title);
 
+            if(currentItem == channel.getRssItems().size() - 1) {
+                views.setBoolean(R.id.right_button,"setEnabled",false);
+                views.setViewVisibility(R.id.right_button, View.INVISIBLE);
+            }
+            else {
+                views.setBoolean(R.id.right_button,"setEnabled",true);
+                views.setViewVisibility(R.id.right_button, View.VISIBLE);
+            }
             Intent rightButtonIntent = new Intent(context, RSSAppWidget.class);
             rightButtonIntent.setAction(RSS_CLICK_RIGHT);
             PendingIntent rightButtonPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, rightButtonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.right_button,rightButtonPendingIntent);
 
+
+
+            if (currentItem == 0) {
+                views.setBoolean(R.id.left_button,"setEnabled",false);
+                views.setViewVisibility(R.id.left_button, View.INVISIBLE);
+            }
+            else {
+                views.setBoolean(R.id.left_button,"setEnabled",true);
+                views.setViewVisibility(R.id.left_button, View.VISIBLE);
+            }
             Intent leftButtonIntent = new Intent(context, RSSAppWidget.class);
             leftButtonIntent.setAction(RSS_CLICK_LEFT);
             PendingIntent leftButtonPendingIntent = PendingIntent.getBroadcast(context, appWidgetId, leftButtonIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.left_button,leftButtonPendingIntent);
 
         }
-        // Instruct the widget manager to update the widget
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -73,25 +91,27 @@ public class RSSAppWidget extends AppWidgetProvider {
         switch (intent.getAction()){
             case RSS_UPDATE_COMPLETE:
                 Log.d(TAG, "RSS_UPDATE_COMPLETE");
-                channel = intent.getParcelableExtra("channel");
-                title = intent.getStringExtra("title");
-                invokeUpdate(context);
+                try{
+                    title = intent.getStringExtra("title");
+                    channel = intent.getParcelableExtra("channel");
+                }catch (NullPointerException ex){
+                    Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
+
             case RSS_CLICK_RIGHT:
                 Log.d(TAG, "right");
                 currentItem++;
-                if(currentItem == channel.getRssItems().size() - 1) currentItem = 0;
-                invokeUpdate(context);
                 break;
+
             case RSS_CLICK_LEFT:
                 Log.d(TAG, "left");
                 currentItem--;
-                if(currentItem == -1) currentItem = channel.getRssItems().size() - 1;
-                invokeUpdate(context);
                 break;
             default:
         }
-
+        invokeUpdate(context);  invokeUpdate(context);
         super.onReceive(context, intent);
     }
 
@@ -110,13 +130,12 @@ public class RSSAppWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         Log.d(TAG, "onEnabled");
-        //setupAlarm(context);
-        // Enter relevant functionality for when the first widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
         super.onDisabled(context);
+        stopAlarm(context);
         Log.d(TAG, "onDisabled");
     }
 

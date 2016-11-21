@@ -43,7 +43,7 @@ public class SettingWidgetActivity extends AppCompatActivity {
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
         }
-        setupAlarm(this);
+
         final EditText rssUrl = (EditText) findViewById(R.id.editTextUrl);
         final TextView error = (TextView) findViewById(R.id.error);
         final Button btnEnter = (Button) findViewById(R.id.enter);
@@ -77,6 +77,7 @@ public class SettingWidgetActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String rssUrltext = rssUrl.getText().toString();
                 PrefUtils.saveToPrefs(getBaseContext(), "rssUrl", rssUrltext);
+                setupAlarm(getBaseContext());
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
 
@@ -95,7 +96,6 @@ public class SettingWidgetActivity extends AppCompatActivity {
     public static PendingIntent getPendingIntent(Context context) {
         Intent intent = new Intent(context, RssService.class);
         intent.setAction(RSS_UPDATE);
-        //  intent.putExtra("url",);
         return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
@@ -106,6 +106,11 @@ public class SettingWidgetActivity extends AppCompatActivity {
         PendingIntent pendingIntent = getPendingIntent(context);
         alarmManager.cancel(pendingIntent);
         alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), 60 * 1000, pendingIntent);
+    }
 
+    public static void stopAlarm(Context context) {
+        Log.d(TAG, "stopAlarm");
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(getPendingIntent(context));
     }
 }

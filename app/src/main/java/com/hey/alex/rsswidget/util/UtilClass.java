@@ -138,7 +138,6 @@ public class UtilClass {
         switch (name) {
             case "title":
                 channel.setTitle(parser.nextText());
-                Log.d(TAG, channel.getTitle());
                 break;
 
             case "description":

@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hey.alex.rsswidget.R;
+import com.hey.alex.rsswidget.service.AlarmReceiver;
 import com.hey.alex.rsswidget.service.RssService;
 import com.hey.alex.rsswidget.util.PrefUtils;
 import com.hey.alex.rsswidget.util.UtilClass;
@@ -94,18 +96,17 @@ public class SettingWidgetActivity extends AppCompatActivity {
 
 
     public static PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(context, RssService.class);
-        intent.setAction(RSS_UPDATE);
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+       // intent.setAction(RSS_UPDATE);
+        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public static void setupAlarm(Context context) {
         Log.d(TAG, "setupAlarm");
         final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
         PendingIntent pendingIntent = getPendingIntent(context);
         alarmManager.cancel(pendingIntent);
-        alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), 60 * 1000, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60 * 1000, pendingIntent);
     }
 
     public static void stopAlarm(Context context) {

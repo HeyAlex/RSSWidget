@@ -26,6 +26,7 @@ import static com.hey.alex.rsswidget.ui.SettingWidgetActivity.stopAlarm;
 public class RSSAppWidget extends AppWidgetProvider {
 
     public static final String TAG = "RSSAppWidget";
+    public static final String UpdateCheckerLog = "UpdateCheckerLog";
 
     public static final String RSS_UPDATE_COMPLETE = "RSS_UPDATE_ON_TASK_COMPLETE";
     public static final String RSS_CLICK_RIGHT = "RSS_CLICK_RIGHT";
@@ -90,7 +91,7 @@ public class RSSAppWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         switch (intent.getAction()){
             case RSS_UPDATE_COMPLETE:
-                Log.d(TAG, "RSS_UPDATE_COMPLETE");
+                Log.d(UpdateCheckerLog, "UpdateCheckerLog");
                 try{
                     title = intent.getStringExtra("title");
                     channel = intent.getParcelableExtra("channel");

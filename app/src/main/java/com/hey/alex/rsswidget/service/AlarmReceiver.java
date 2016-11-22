@@ -1,7 +1,9 @@
 package com.hey.alex.rsswidget.service;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
@@ -22,6 +24,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         service.setAction(RSS_UPDATE);
         startWakefulService(context, service);
         Log.d(TAG, "start service");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+         setupAlarm(context);
+        }
       //  setupAlarm(context);
     }
 }

@@ -1,4 +1,5 @@
 # RSSWidget
 
-apk: https://yadi.sk/d/aWOHPKiGz8Uxt
-комментарий: http://pastebin.com/Bz1gs4xb
+apk: https://yadi.sk/d/BGi5Hk1azEKZR
+
+Версию с mvp не стал грузить, там проблемы c отрисовкой remoteviews. То что сейчас - это старый вариант с исправленной работой AlarmManger'а. Теперь приложение должно работать корректно в слип моде. 
